@@ -1,57 +1,83 @@
-# <img src="https://user-images.githubusercontent.com/307597/154772945-1b7dba5f-21cf-41d0-bb2e-65b6eff4aaaf.png" width="30" /> SerpApi Public Roadmap
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>Heart Landing</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #050505;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
 
-This issue-only repository is our public roadmap for SerpApi, LLC.
+    <canvas id="heartCanvas"></canvas>
 
-Add a new issue for feature requests, new APIs, and to report an issue.
+    <script>
+        const canvas = document.getElementById("heartCanvas");
+        const ctx = canvas.getContext("2d");
 
-Feel free to explore existing issues, leave comments, upvote issues, and add new issues. Issues have 5 levels of priority: `freezer` < `queued` < `prioritized` < `urgent` < `doom`. Issues can be a `bug` or a `feature`.
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-## Report an issue
-1. Search [existing issues](https://github.com/serpapi/public-roadmap/issues) if your issue isn't already reported. Leave a comment and upvote with a thumb up if it is.
-2. Open a [new issue](
-https://github.com/serpapi/public-roadmap/issues/new?assignees=&labels=type%3A+bug&projects=&template=bug.md&title=%5BExample+Search+API%5D+%28omit+if+not+an+API%29+Short+summary+of+the+bug). Make sure to:
-    - Write a clear title (e.g., "On Google Maps API, addresses are not extracted anymore")
-    - Write a description as detailed as possible of what's wrong
-    - Add a screenshot(s) with area of interest marked with red rectangles
-    - Add a playground link(s) to reproduce the issue (e.g., https://serpapi.com/playground?q=Coffee&location=Austin%2C+Texas%2C+United+States&gl=us&hl=en)
-    - Add a search inspect link(s) of a search with the issue
-    - Add a direct link(s) to the search engine
-    - If relevant, write step-by-step instructions on how to reproduce the issue
-3. Post the issue
-4. Wait for an update and early triage from us
-5. Feel free to add comments if you have more information
-6. We will fix our code and close the issue
+        let particles = [];
+        let angle = 0;
 
-## Ask for new APIs (or features)
-1. Search [existing issues](https://github.com/serpapi/public-roadmap/issues) if your request isn't already reported. Leave a comment and upvote with a thumb up if it is.
-2. Open a [new issue](https://github.com/serpapi/public-roadmap/issues/new?assignees=&labels=type%3A+feature&projects=&template=feature.md&title=%5BExample+Search+API%5D+%28omit+if+not+an+API%29+Short+summary+of+the+feature
-). Make sure to:
-    - Write a clear title (e.g., "Add support for Amazon Search API")
-    - Write a detailed description of what you are expecting
-    - Add a screenshot(s) (with area of interest marked with red rectangles if relevant)
-    - Add a direct link(s) to the search engine
-    - If relevant, write step-by-step instructions on how to the feature would work
-3. Post the issue
-4. Wait for an update and early triage from us
-6. Feel free to add comments if you have more information
-7. We will release an update with this new API (or feature) and close the issue
+        function heartFunction(t) {
+            let x = 16 * Math.pow(Math.sin(t), 3);
+            let y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+            return { x, y };
+        }
 
-## Mission statement and vision
+        // إنشاء النقاط
+        for (let i = 0; i < 350; i++) {
+            let t = Math.random() * Math.PI * 2;
+            let pos = heartFunction(t);
+            let shrink = Math.random() > 0.3 ? Math.random() : 1.0;
+            
+            particles.push({
+                baseX: pos.x * shrink,
+                baseY: pos.y * shrink,
+                color: ["#ff2a6d", "#ff5e7e", "#ff0055", "#e60049", "#ff99ac"][Math.floor(Math.random() * 5)],
+                size: Math.floor(Math.random() * 6) + 10
+            });
+        }
 
-SerpApi, LLC aims to provide the best APIs in the world for every search engine. 
+        function animate() {
+            ctx.fillStyle = "rgba(5, 5, 5, 0.3)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-## Values
+            let scale = 15;
+            let pulse = 1 + 0.08 * Math.sin(angle);
+            angle += 0.08;
 
-Our primary value is transparency. This Public Roadmap repository is a good example of it.
+            let centerX = canvas.width / 2;
+            let centerY = canvas.height / 2;
 
-## Legal disclaimers
+            particles.forEach(p => {
+                let currX = centerX + p.baseX * scale * pulse;
+                let currY = centerY + p.baseY * scale * pulse;
 
-https://serpapi.com/legal
+                ctx.fillStyle = p.color;
+                ctx.font = `bold ${p.size}px Arial`;
+                ctx.fillText("I love you", currX, currY);
+            });
 
-## View all issues
+            requestAnimationFrame(animate);
+        }
 
-https://github.com/serpapi/public-roadmap/issues
-
-## Add a new issue
-
-https://github.com/serpapi/public-roadmap/issues/new
+        animate();
+    </script>
+</body>
+</html>
